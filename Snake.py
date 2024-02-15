@@ -2,6 +2,7 @@ import pygame
 from Player import player_head
 from Player import player_body
 from FOOD import food
+import random
 
 pygame.init()
 class Game:
@@ -11,10 +12,11 @@ class Game:
         self.player_sprite = player_head()
         self.food_sprite = food()
         self.player_head = pygame.sprite.GroupSingle(self.player_sprite)
-        self.food = pygame.sprite.Group(self.food_sprite)
+        self.food = pygame.sprite.GroupSingle(self.food_sprite)
         self.x = 350
         self.y = 350
         self.player_segment = []
+        self.amount_of_segmetnts = 1
         
     def drawing_player(self):
         for segment in self.player_segment:
@@ -43,11 +45,20 @@ class Game:
             self.player_segment.append(player_body(self.x,self.y))
             self.y = self.player_head.sprite.rect.y
 
-        if len(self.player_segment) > 3:
+        if len(self.player_segment) > self.amount_of_segmetnts:
             self.player_segment.pop(0)
+
+    def food_collison(self):
+        if pygame.sprite.spritecollide(self.player_head.sprite,self.food,False):
+            self.food.sprite.rect.x = random.randint(40,740)
+            self.food.sprite.rect.y = random.randint(40,740)
+            self.amount_of_segmetnts += 1
+
+
     def run(self):
         self.player_head.draw(screen)
         self.food.draw(screen)
+        self.food_collison()
         self.uppdate_player()
         self.drawing_player()
         
