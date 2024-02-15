@@ -1,41 +1,56 @@
 import pygame
-from Player import player
+from Player import player_head
+from Player import player_body
+from FOOD import food
 
 pygame.init()
 class Game:
 
     def __init__(self):
         self.dircetion = "RIGHT"
-        self.where_to_turn_x = None
-        self.where_to_turn_y = None
-        self.player_sprite = player(350,(2),)
+        self.player_sprite = player_head()
+        self.food_sprite = food()
         self.player_head = pygame.sprite.GroupSingle(self.player_sprite)
-        self.player_body = pygame.sprite.Group()
-        self.amount = 2
-        self.g = 2
-
-    def drawing_player(self):
-        x = self.player_head.sprite.rect.x - 40
-        t = 0
+        self.food = pygame.sprite.Group(self.food_sprite)
+        self.x = 350
+        self.y = 350
+        self.player_segment = []
         
-        if self.g >= 0:
-            for t in range(self.amount):
-                player_sprite = player(x,(1),)
-                self.player_body.add(player_sprite)
-                x = self.player_body.sprites()[t].rect.x - 40
-                t += 1
-                self.g -= 1
+    def drawing_player(self):
+        for segment in self.player_segment:
+            screen.blit(segment.image, segment.rect)
 
     def uppdate_player(self):
-        self.player_head.sprite.move(self.dircetion)
-    def run(self):
 
+        self.player_head.sprite.move(self.dircetion)
+        for segment in self.player_segment:
+            if self.player_head.sprite.rect.colliderect(segment.rect):
+                print("Game Over")
         
+        if self.player_head.sprite.rect.x == self.x + 40 and self.dircetion == "RIGHT":
+            self.player_segment.append(player_body(self.x,self.y))
+            self.x = self.player_head.sprite.rect.x
+
+        if self.player_head.sprite.rect.y == self.y + 40 and self.dircetion == "DOWN":
+            self.player_segment.append(player_body(self.x,self.y))
+            self.y = self.player_head.sprite.rect.y
+
+        if self.player_head.sprite.rect.x == self.x - 40 and self.dircetion == "LEFT":
+            self.player_segment.append(player_body(self.x,self.y))
+            self.x = self.player_head.sprite.rect.x
+
+        if self.player_head.sprite.rect.y == self.y - 40 and self.dircetion == "UP":
+            self.player_segment.append(player_body(self.x,self.y))
+            self.y = self.player_head.sprite.rect.y
+
+        if len(self.player_segment) > 3:
+            self.player_segment.pop(0)
+    def run(self):
         self.player_head.draw(screen)
-        self.player_body.draw(screen)
-        self.player_body.update(self.where_to_turn_x,self.where_to_turn_y)
+        self.food.draw(screen)
         self.uppdate_player()
         self.drawing_player()
+        
 
 
 
@@ -57,21 +72,18 @@ while run:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
                 game.dircetion = "UP"
-                game.where_to_turn_x = game.player_head.sprite.rect.x
 
             if event.key == pygame.K_s:
                 game.dircetion = "DOWN"
-                game.where_to_turn_x = game.player_head.sprite.rect.x
 
             if event.key == pygame.K_d:
                 game.dircetion = "RIGHT"
-                game.where_to_turn_y = game.player_head.sprite.rect.y
+                
 
             if event.key == pygame.K_a:
                 game.dircetion = "LEFT"
-                game.where_to_turn_y = game.player_head.sprite.rect.y
                 
     screen.fill((0,0,0))
     game.run()
     pygame.display.flip()
-    Clock.tick(11) 
+    Clock.tick(8) 
