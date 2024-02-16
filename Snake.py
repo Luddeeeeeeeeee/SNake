@@ -17,17 +17,54 @@ class Game:
         self.y = 350
         self.player_segment = []
         self.amount_of_segmetnts = 1
+        self.my_font = pygame.font.Font("freesansbold.ttf", 39)
         
     def drawing_player(self):
         for segment in self.player_segment:
             screen.blit(segment.image, segment.rect)
 
     def uppdate_player(self):
+        global brun 
 
         self.player_head.sprite.move(self.dircetion)
+        if self.player_head.sprite.rect.x >= 800 or self.player_head.sprite.rect.x <= 0:
+            brun = False
+            self.player_head.sprite.rect.x = 350
+            self.player_head.sprite.rect.y = 350
+            self.food.sprite.rect.x = 550
+            self.food.sprite.rect.y = 350
+            self.amount_of_segmetnts = 1
+            self.x = 350
+            self.y = 350
+            self.dircetion = "RIGHT"
+            self.player_segment.clear()
+
+
+        if self.player_head.sprite.rect.y >= 800 or self.player_head.sprite.rect.y <= 0:
+            brun = False
+            self.player_head.sprite.rect.x = 350
+            self.player_head.sprite.rect.y = 350
+            self.food.sprite.rect.x = 550
+            self.food.sprite.rect.y = 350
+            self.amount_of_segmetnts = 1
+            self.x = 350
+            self.y = 350
+            self.dircetion = "RIGHT"
+            self.player_segment.clear()
+
+
         for segment in self.player_segment:
             if self.player_head.sprite.rect.colliderect(segment.rect):
-                print("Game Over")
+                brun = False
+                self.player_head.sprite.rect.x = 350
+                self.player_head.sprite.rect.y = 350
+                self.food.sprite.rect.x = 550
+                self.food.sprite.rect.y = 350
+                self.amount_of_segmetnts = 1
+                self.x = 350
+                self.y = 350
+                self.dircetion = "RIGHT"
+                self.player_segment.clear()
         
         if self.player_head.sprite.rect.x == self.x + 40 and self.dircetion == "RIGHT":
             self.player_segment.append(player_body(self.x,self.y))
@@ -47,12 +84,17 @@ class Game:
 
         if len(self.player_segment) > self.amount_of_segmetnts:
             self.player_segment.pop(0)
+        
+        
 
     def food_collison(self):
         if pygame.sprite.spritecollide(self.player_head.sprite,self.food,False):
             self.food.sprite.rect.x = random.randint(40,740)
             self.food.sprite.rect.y = random.randint(40,740)
             self.amount_of_segmetnts += 1
+    def start_screen(self):
+        text = self.my_font.render("Press Space to start", False, (255, 255, 255))
+        screen.blit(text, (150,350))
 
 
     def run(self):
@@ -61,7 +103,7 @@ class Game:
         self.food_collison()
         self.uppdate_player()
         self.drawing_player()
-        
+
 
 
 
@@ -73,6 +115,7 @@ screen = pygame.display.set_mode((cell_size * cell_number,cell_size * cell_numbe
 run = True
 
 game = Game()
+brun = False
 while run:
     
     for event in pygame.event.get():
@@ -93,8 +136,16 @@ while run:
 
             if event.key == pygame.K_a:
                 game.dircetion = "LEFT"
+
+            if event.key == pygame.K_SPACE:
+                brun = True
                 
     screen.fill((0,0,0))
-    game.run()
+    game.start_screen()
+    if brun == True:
+
+        screen.fill((0,0,0))
+        game.run()
+    
     pygame.display.flip()
     Clock.tick(8) 
