@@ -124,17 +124,17 @@ while run:
             run = False
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
+            if event.key == pygame.K_w and game.dircetion != "DOWN":
                 game.dircetion = "UP"
 
-            if event.key == pygame.K_s:
+            if event.key == pygame.K_s and game.dircetion != "UP":
                 game.dircetion = "DOWN"
 
-            if event.key == pygame.K_d:
+            if event.key == pygame.K_d and game.dircetion != "LEFT":
                 game.dircetion = "RIGHT"
                 
 
-            if event.key == pygame.K_a:
+            if event.key == pygame.K_a and game.dircetion != "RIGHT":
                 game.dircetion = "LEFT"
 
             if event.key == pygame.K_SPACE:
