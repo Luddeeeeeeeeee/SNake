@@ -28,43 +28,16 @@ class Game:
 
         self.player_head.sprite.move(self.dircetion)
         if self.player_head.sprite.rect.x >= 800 or self.player_head.sprite.rect.x <= 0:
-            brun = False
-            self.player_head.sprite.rect.x = 350
-            self.player_head.sprite.rect.y = 350
-            self.food.sprite.rect.x = 550
-            self.food.sprite.rect.y = 350
-            self.amount_of_segmetnts = 1
-            self.x = 350
-            self.y = 350
-            self.dircetion = "RIGHT"
-            self.player_segment.clear()
-
+            self.restart()
 
         if self.player_head.sprite.rect.y >= 800 or self.player_head.sprite.rect.y <= 0:
-            brun = False
-            self.player_head.sprite.rect.x = 350
-            self.player_head.sprite.rect.y = 350
-            self.food.sprite.rect.x = 550
-            self.food.sprite.rect.y = 350
-            self.amount_of_segmetnts = 1
-            self.x = 350
-            self.y = 350
-            self.dircetion = "RIGHT"
-            self.player_segment.clear()
+            self.restart()
 
 
         for segment in self.player_segment:
             if self.player_head.sprite.rect.colliderect(segment.rect):
-                brun = False
-                self.player_head.sprite.rect.x = 350
-                self.player_head.sprite.rect.y = 350
-                self.food.sprite.rect.x = 550
-                self.food.sprite.rect.y = 350
-                self.amount_of_segmetnts = 1
-                self.x = 350
-                self.y = 350
-                self.dircetion = "RIGHT"
-                self.player_segment.clear()
+                self.restart()
+
         
         if self.player_head.sprite.rect.x == self.x + 40 and self.dircetion == "RIGHT":
             self.player_segment.append(player_body(self.x,self.y))
@@ -96,6 +69,18 @@ class Game:
         text = self.my_font.render("Press Space to start", False, (255, 255, 255))
         screen.blit(text, (150,350))
 
+    def restart(self):
+        global brun       
+        brun = False
+        self.player_head.sprite.rect.x = 350
+        self.player_head.sprite.rect.y = 350
+        self.food.sprite.rect.x = 550
+        self.food.sprite.rect.y = 350
+        self.amount_of_segmetnts = 1
+        self.x = 350
+        self.y = 350
+        self.dircetion = "RIGHT"
+        self.player_segment.clear()      
 
     def run(self):
         self.player_head.draw(screen)
