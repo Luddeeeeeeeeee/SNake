@@ -148,4 +148,4 @@ while run:
         game.run()
     
     pygame.display.flip()
-    Clock.tick(8) 
+    Clock.tick(7) 
